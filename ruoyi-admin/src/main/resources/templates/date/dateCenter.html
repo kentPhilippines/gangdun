@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('百度ECharts')" />
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="ibox">
+				<div class="ibox-content">
+					<h5 class="m-b-md">商户总跑量</h5>
+					<h2 class="text-navy">
+						<i class="fa fa-play fa-rotate-270"></i> 2321132
+					</h2>
+					<small>更新时间：2023-02-26</small>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="ibox">
+				<div class="ibox-content ">
+					<h5 class="m-b-md">当日毛利润</h5>
+					<h2 class="text-navy">
+						<i class="fa fa-play fa-rotate-270"></i> 21212
+					</h2>
+					<small>更新时间：2023-02-26</small>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="ibox">
+				<div class="ibox-content">
+					<h5 class="m-b-md">总体成功率</h5>
+					<h2 class="text-danger">
+						<i class="fa fa-play fa-rotate-90"></i> 67%
+					</h2>
+					<small>更新时间：2023-02-26</small>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="ibox">
+				<div class="ibox-content">
+					<h5 class="m-b-md">车队分摊成本</h5>
+					<h2 class="text-danger">
+						<i class="fa fa-play fa-rotate-90"></i> 12323
+					</h2>
+					<small>更新时间：2023-02-26</small>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="ibox">
+				<div class="ibox-content">
+					<h5>车队收入</h5>
+					<h1 class="no-margins">886,200</h1>
+					<div class="stat-percent font-bold text-navy">98% <i class="fa fa-bolt"></i></div>
+					<small>总收入</small>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="ibox">
+				<div class="ibox-content">
+					<h5>本月收入</h5>
+					<h1 class="no-margins">1 738,200</h1>
+					<div class="stat-percent font-bold text-navy">98% <i class="fa fa-bolt"></i></div>
+					<small>总收入</small>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="ibox">
+				<div class="ibox-content">
+					<h5>本日收入</h5>
+					<h1 class="no-margins">-200,100</h1>
+					<div class="stat-percent font-bold text-danger">12% <i class="fa fa-level-down"></i></div>
+					<small>总收入</small>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="ibox">
+				<div class="ibox-content">
+					<h5>总资金量</h5>
+					<h1 class="no-margins">54,200</h1>
+					<div class="stat-percent font-bold text-danger">24% <i class="fa fa-level-down"></i></div>
+					<small>总资金量：车队利润+利润+商户结余+车队押金</small>
+				</div>
+			</div>
+		</div>
+	</div>
+ </div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>折线图</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="fa fa-wrench"></i>
+						</a>
+						<ul class="dropdown-menu dropdown-user">
+							<li><a href="#">选项1</a>
+							</li>
+							<li><a href="#">选项2</a>
+							</li>
+						</ul>
+						<a class="close-link">
+							<i class="fa fa-times"></i>
+						</a>
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div class="echarts" id="echarts-line-chart"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>柱状图</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="fa fa-wrench"></i>
+						</a>
+						<ul class="dropdown-menu dropdown-user">
+							<li><a href="#">选项1</a>
+							</li>
+							<li><a href="#">选项2</a>
+							</li>
+						</ul>
+						<a class="close-link">
+							<i class="fa fa-times"></i>
+						</a>
+					</div>
+				</div>
+				<div class="ibox-content">
+
+					<div class="echarts" id="echarts-bar-chart"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: echarts-js" />
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: peity-js" />
+<th:block th:include="include :: sparkline-js" />
+<script type="text/javascript">
+	$(function () {
+		var lineChart = echarts.init(document.getElementById("echarts-line-chart"));
+		var lineoption = {
+			title : {
+				text: '利润跑量关系'
+			},
+			tooltip : {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['利润（万）','跑量（百万）']
+			},
+			grid:{
+				x:40,
+				x2:40,
+				y2:24
+			},
+			calculable : true,
+			xAxis : [
+				{
+					type : 'category',
+					boundaryGap : false,
+					data : ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21']
+				}
+			],
+			yAxis : [
+				{
+					type : 'value',
+					axisLabel : {
+						formatter: '{value} 元'
+					}
+				}
+			],
+			series : [
+				{
+					name:'最高气温',
+					type:'line',
+					data:[11, 8, 15, 13, 22, 13, 10, 15, 13, 14, 13, 18, 13, 27, 13, 15, 13, 9, 13, 15, 13 ],
+					markPoint : {
+						data : [
+							{type : 'max', name: '最大值'},
+							{type : 'min', name: '最小值'}
+						]
+					},
+					markLine : {
+						data : [
+							{type : 'average', name: '平均值'}
+						]
+					}
+				},
+				{
+					name:'最低气温',
+					type:'line',
+					data:[11, 8, 15, 13, 6, 13, 2, 15, 13, 2, 13, 18, 13, 4, 13, 15, 13, 9, 13, 15, 13 ],
+					markPoint : {
+						data : [
+							{name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
+						]
+					},
+					markLine : {
+						data : [
+							{type : 'average', name : '平均值'}
+						]
+					}
+				}
+			]
+		};
+		lineChart.setOption(lineoption);
+		$(window).resize(lineChart.resize);
+
+		var barChart = echarts.init(document.getElementById("echarts-bar-chart"));
+		var baroption = {
+			title : {
+				text: '跑量情况数据'
+			},
+			tooltip : {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['支付宝','银行卡']
+			},
+			grid:{
+				x:30,
+				x2:40,
+				y2:24
+			},
+			calculable : true,
+			xAxis : [
+				{
+					type : 'category',
+					data : ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21']				}
+			],
+			yAxis : [
+				{
+					type : 'value'
+				}
+			],
+			series : [
+				{
+					name:'支付宝',
+					type:'bar',
+					data:[11, 8, 15, 13, 22, 13, 10, 15, 13, 14, 13, 18, 13, 27, 13, 15, 13, 9, 13, 15, 13 ],
+					markPoint : {
+						data : [
+							{type : 'max', name: '最大值'},
+							{type : 'min', name: '最小值'}
+						]
+					},
+					markLine : {
+						data : [
+							{type : 'average', name: '平均值'}
+						]
+					}
+				},
+				{
+					name:'银行卡',
+					type:'bar',
+					data:[11, 8, 15, 13, 6, 13, 2, 15, 13, 2, 13, 18, 13, 4, 13, 15, 13, 9, 13, 15, 13 ],
+					markPoint : {
+						data : [
+							{name : '年最高', value : 182.2, xAxis: 7, yAxis: 183, symbolSize:18},
+							{name : '年最低', value : 2.3, xAxis: 11, yAxis: 3}
+						]
+					},
+					markLine : {
+						data : [
+							{type : 'average', name : '平均值'}
+						]
+					}
+				}
+			]
+		};
+		barChart.setOption(baroption);
+
+		window.onresize = barChart.resize;
+
+
+
+
+
+
+
+
+
+
+
+
+
+	});
+
+ 		$(document).ready(function () {
+		$("#sparkline1").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
+			type: 'line',
+			width: '100%',
+			height: '60',
+			lineColor: '#1ab394',
+			fillColor: "#ffffff"
+		});
+
+		$("#sparkline2").sparkline([24, 43, 43, 55, 44, 62, 44, 72], {
+		type: 'line',
+		width: '100%',
+		height: '60',
+		lineColor: '#1ab394',
+		fillColor: "#ffffff"
+	});
+
+		$("#sparkline3").sparkline([74, 43, 23, 55, 54, 32, 24, 12], {
+		type: 'line',
+		width: '100%',
+		height: '60',
+		lineColor: '#ed5565',
+		fillColor: "#ffffff"
+	});
+
+		$("#sparkline4").sparkline([24, 43, 33, 55, 64, 72, 44, 22], {
+		type: 'line',
+		width: '100%',
+		height: '60',
+		lineColor: '#ed5565',
+		fillColor: "#ffffff"
+	});
+
+		$("#sparkline5").sparkline([1, 4], {
+		type: 'pie',
+		height: '140',
+		sliceColors: ['#1ab394', '#F5F5F5']
+	});
+
+		$("#sparkline6").sparkline([5, 3], {
+		type: 'pie',
+		height: '140',
+		sliceColors: ['#1ab394', '#F5F5F5']
+	});
+
+		$("#sparkline7").sparkline([2, 2], {
+		type: 'pie',
+		height: '140',
+		sliceColors: ['#ed5565', '#F5F5F5']
+	});
+
+		$("#sparkline8").sparkline([2, 3], {
+		type: 'pie',
+		height: '140',
+		sliceColors: ['#ed5565', '#F5F5F5']
+	});
+	});
+
+		$(function() {
+		$("span.pie").peity("pie", {
+			fill: ['#1ab394', '#d7d7d7', '#ffffff']
+		})
+
+		$(".line").peity("line",{
+		fill: '#1ab394',
+		stroke:'#169c81',
+	})
+
+		$(".bar").peity("bar", {
+		fill: ["#1ab394", "#d7d7d7"]
+	})
+
+		$(".bar_dashboard").peity("bar", {
+		fill: ["#1ab394", "#d7d7d7"],
+		width:100
+	})
+
+		var updatingChart = $(".updating-chart").peity("line", { fill: '#1ab394',stroke:'#169c81', width: 64 })
+
+		setInterval(function() {
+		var random = Math.round(Math.random() * 10)
+		var values = updatingChart.text().split(",")
+		values.shift()
+		values.push(random)
+
+		updatingChart
+		.text(values.join(","))
+		.change()
+	}, 1000);
+	});
+</script>
+</body>
+</html>

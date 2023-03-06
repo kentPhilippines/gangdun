@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include :: header('实时资源管理')"/>
+    <th:block th:include="include :: bootstrap-select-css"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="complex-form">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label style="width: 80px">产品类型：</label>
+                            <select>
+                                <option value="">支付宝</option>
+                                <option value="">小额支付宝</option>
+                                <option value="0">银行卡</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label style="width: 80px">资源编组：</label>
+                            <select>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="0">3</option>
+                            </select>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm m50" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('complex-form')"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+
+    </div>
+
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-select-js"/>
+<th:block th:include="include :: jquery-cxselect-js"/>
+<script th:inline="javascript">
+    var prefix = ctx + "demo/table";
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            showFooter: true,
+            footerStyle: footerStyle,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'userCode',
+                    title: '资源编组'
+                },
+                {
+                    field: 'userName',
+                    title: '车队编号'
+                },
+                {
+                    field: 'payType',
+                    title: '产品类型',
+                    formatter: function (value, row, index) {
+                        return '支付宝'
+                    }
+                },
+                {
+                    field: 'account',
+                    title: '收款详细',
+                    formatter: function (value, row, index) {
+                        return '户名：张三，账号：1212121212，类型：固定二维码'
+                    }
+                },
+                {
+                    field: 'account',
+                    title: '入单规则',
+                    formatter: function (value, row, index) {
+                        var table = '<ul>'
+                        table += '<li>' + '车队押金：' + 50000 + '元</li>'
+                        table += '<li>' + '实时接单金额：' + 10000 + '元</li>'
+                        table += '<li>' + '虚拟冻结额度：' + 500 + '元</li>'
+                        table += '<li>' + '状态： 接单开启</li>'
+                        table += '</ul>'
+                        return table;
+                    }
+                },
+                {
+                    field: 'account',
+                    title: '接单数据',
+                    formatter: function (value, row, index) {
+                        var table = '<ul>'
+                        table += '<li>' + '当日接单：' + 4892 + '元</li>'
+                        table += '<li>' + '总接单：' + 23123 + '元</li>'
+                        table += '<li>' + '当日笔数：' + 23 + '笔</li>'
+                        table += '<li>' + '总笔数：' + 100 + '笔</li>'
+                        table += '</ul>'
+                        return table;
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-danger btn-xs" href="#"><i  ></i>优先收款</a>');
+                        actions.push('<a class="btn btn-primary btn-xs" href="javascript:void(0)"  ><i ></i>剔除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+    function footerStyle(column) {
+        return {
+            userBalance: {
+                css: {color: 'red', 'font-weight': 'normal'}
+            }
+        }[column.field]
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include :: header('入款订单管理')"/>
+    <th:block th:include="include :: bootstrap-select-css"/>
+
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="complex-form">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label style="width: 80px">商户编号：</label>
+                            <input type="text" name="userId1"/>
+                        </li>
+                        <li>
+                            <label style="width: 80px">产品类型：</label>
+                            <input type="text" name="userId1"/>
+                        </li>
+                        <li>
+                            <label style="width: 80px">渠道类型：</label>
+                            <input type="text" name="userId1"/>
+                        </li>
+                        <li>
+                            <label style="width: 80px">车队编号：</label>
+                            <input type="text" name="userId1"/>
+                        </li>
+                        <li>
+                            <label style="width: 80px">订单状态：</label>
+                            <select>
+                                <option value="">所有</option>
+                                <option value="0">处理中</option>
+                                <option value="1">成功</option>
+                                <option value="2">失败</option>
+                            </select>
+                        </li>
+                        <li class="select-time">
+                            <label style="width: 80px">时间：</label>
+                            <input type="text" class="time-input" placeholder="开始时间"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" placeholder="结束时间"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm m50" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('complex-form')"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+
+    </div>
+
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-select-js"/>
+<th:block th:include="include :: jquery-cxselect-js"/>
+
+<script th:inline="javascript">
+    var prefix = ctx + "demo/table";
+    var datas = [[${@dict.getType('re_order_status')}]];
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            showFooter: true,
+            footerStyle: footerStyle,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'userCode',
+                    title: '订单号'
+                },
+                {
+                    field: 'userName',
+                    title: '商户id'
+                },
+                {
+                    field: 'userName',
+                    title: '车队编号'
+                },
+                {
+                    field: 'userBalance',
+                    title: '订单金额',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].userBalance);
+                        }
+                        return "总金额：" + sumBalance;
+                    }
+                },
+                {
+                    field: 'userBalance',
+                    title: '商户手续费',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].userBalance);
+                        }
+                        return "总金额：" + sumBalance;
+                    }
+                }, {
+                    field: 'userBalance',
+                    title: '车队手续费',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].userBalance);
+                        }
+                        return "总金额：" + sumBalance;
+                    }
+                }, {
+                    field: 'userBalance',
+                    title: '利润',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].userBalance);
+                        }
+                        return "总金额：" + sumBalance;
+                    }
+                },
+                {
+                    field: 'status',
+                    title: '订单状态',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(datas, value);
+                    }
+                },
+                {
+                    field: 'payType',
+                    title: '产品类型',
+                    formatter: function (value, row, index) {
+                        return '支付宝'
+                    }
+                },
+                {
+                    field: 'account',
+                    title: '收款详细',
+                    formatter: function (value, row, index) {
+                        return '户名：张三，账号：1212121212，类型：固定二维码'
+                    }
+                },
+                /*  {
+                      field: 'info',
+                      title: '订单日志',
+                      formatter: function (value, row, index) {
+                          value = ' 2023-02-25 12:22:33 拉起订单；2023-02-25 12:22:33 等待支付；2023-02-25 12:22:33 订单成功；2023-02-25 12:22:33 订单补单；';
+                          if(value==null)
+                          {
+                              return "";
+                          }
+
+                          var valueWithBr=value.replace(/;/g,'<br>');
+                          return '<a class="' + '" href="javascript:void(0)" onclick="layer.open({content: \''+valueWithBr+'\'})"> ' +value+'</a>';
+                      }
+                  },*/
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs" href="#"><i  ></i>补单</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs" href="#"><i  ></i>成功</a>');
+                        actions.push('<a class="btn btn-primary btn-xs" href="javascript:void(0)"  ><i ></i>失败</a>');
+                        actions.push('<a class="btn btn-success btn-xs" href="#"onclick="info(\'' + row.info + '\')"><i ></i>订单日志</a> ');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    function footerStyle(column) {
+        return {
+//         	    userBalance: {
+//         	        classes: 'class'
+//         	    },
+            userBalance: {
+                css: {color: 'red', 'font-weight': 'normal'}
+            }
+        }[column.field]
+    }
+
+    function info(info) {
+        let value = ' 2023-02-25 12:22:33 拉起订单；2023-02-25 12:22:33 等待支付；2023-02-25 12:22:33 订单成功；2023-02-25 12:22:33 订单补单；';
+        if (value == null) {
+            return "";
+        }
+
+        var valueWithBr = value.replace(/;/g, '<br>');
+        layer.open({content: valueWithBr})
+    }
+</script>
+</body>
+
+</html>

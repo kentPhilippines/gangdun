@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include :: header('商户管理')"/>
+    <th:block th:include="include :: bootstrap-select-css"/>
+
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="complex-form">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label style="width: 80px">商户编号：</label>
+                            <input type="text" name="userId1"/>
+                        </li>
+                        <li>
+                            <label style="width: 80px">上级代理：</label>
+                            <input type="text" name="acting1"/>
+                        </li>
+                        <li>
+                            <label style="width: 80px">日期：</label>
+                            <input type="text" class="time-input" placeholder="日期"/>
+                        </li>
+                        <li>
+                            <label style="width: 80px">商户状态：</label>
+                            <select>
+                                <option value="">所有</option>
+                                <option value="0">代付停</option>
+                                <option value="1">充值停</option>
+                                <option value="2">代付正常</option>
+                                <option value="2">充值正常</option>
+                                <option value="2">关停</option>
+                            </select>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm m50" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('complex-form')"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+
+    </div>
+
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-select-js"/>
+<th:block th:include="include :: jquery-cxselect-js"/>
+
+<script th:inline="javascript">
+    var prefix = ctx + "demo/table";
+    var datas = [[${@dict.getType('sys_normal_disable')}]];
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            showFooter: true,
+            footerStyle: footerStyle,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field : 'userCode',
+                    title : '用户编号'
+                },
+                {
+                    field : 'userName',
+                    title : '用户姓名'
+                },
+                {
+                    field: 'userBalance',
+                    title: '用户余额',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].userBalance);
+                        }
+                        return "总金额：" + sumBalance;
+                    }
+                },
+                {
+                    field: 'userBalance',
+                    title: '当日入款',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].userBalance);
+                        }
+                        return "总金额：" + sumBalance;
+                    }
+                }, {
+                    field: 'userBalance',
+                    title: '总入款',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].userBalance);
+                        }
+                        return "总金额：" + sumBalance;
+                    }
+                }, {
+                    field: 'userBalance',
+                    title: '当日出款',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].userBalance);
+                        }
+                        return "总金额：" + sumBalance;
+                    }
+                }, {
+                    field: 'userBalance',
+                    title: '总出款',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].userBalance);
+                        }
+                        return "总金额：" + sumBalance;
+                    }
+                },
+                {
+                    field: 'status',
+                    title: '用户状态',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(datas, value);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs" href="#"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs" href="#"><i class="fa fa-remove"></i>账户加减款</a>');
+                        actions.push('<a class="btn btn-primary btn-xs" href="javascript:void(0)" onclick="selectUsersToParent4(\'' + row.id + '\')"><i class="line-chart"></i>查看数据汇总</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+    function footerStyle(column) {
+        return {
+//         	    userBalance: {
+//         	        classes: 'class'
+//         	    },
+            userBalance: {
+                css: {color: 'red', 'font-weight': 'normal'}
+            }
+        }[column.field]
+    }
+    // callBack获取父窗口值（方式四）
+    function selectUsersToParent4(id) {
+        var prefix = ctx + "date";
+        var options = {
+            title: '商户数据',
+            url: prefix,
+            callBack: doSubmit4
+        };
+        $.modal.openOptions(options);
+    }
+
+</script>
+</body>
+
+</html>
