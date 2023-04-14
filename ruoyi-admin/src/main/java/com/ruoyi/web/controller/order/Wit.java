@@ -15,8 +15,4 @@ public class Wit extends BaseController {
     public String wit() {
         return prefix + "/wit";
     }
-
-
-
-
 }
