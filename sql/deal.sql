@@ -1,64 +1,57 @@
-drop table if exists pay_user_info;
-CREATE TABLE `pay_user_info`
+drop table if exists pay_merchant_info;
+CREATE TABLE `pay_merchant_info`
 (
-    `id`                int(32) NOT NULL AUTO_INCREMENT COMMENT '数据id',
-    `userId`            varchar(32)    NOT NULL COMMENT '用户id【登录账号】',
-    `userName`          varchar(32)    NOT NULL COMMENT '用户昵称',
-    `password`          varchar(128)   NOT NULL COMMENT 'shiro加密秘钥【登录】',
-    `payPasword`        varchar(256)   NOT NULL COMMENT 'shiro加密秘钥【资金】【商户则为交易秘钥】',
-    `salt`              varchar(32)             DEFAULT NULL COMMENT '秘钥加密盐值【加密算法】',
-    `userType`          int(2) DEFAULT NULL COMMENT '用户类型,商户1 码商2,渠道3',
-    `switchs`           int(2) NOT NULL DEFAULT '1' COMMENT '当前用户总开关 1开启0关闭【码商商户后台控制,该值只能在后台显示】',
-    `userNode`          varchar(128)            DEFAULT '未添加' COMMENT '组群备注,如果为渠道账户则为渠道商户号',
-    `agent`             varchar(24)             DEFAULT NULL COMMENT '代理商id【如果存在代理商则存在数据,如果不存在代理商则为null】',
-    `isAgent`           char(3)                 DEFAULT NULL COMMENT '是否为代理商:1代理商2普通码商【分润结算类型看用户类型userType】',
-    `credit`            decimal(10, 2) NOT NULL DEFAULT '100.00' COMMENT '虚拟冻结金额',
-    `receiveOrderState` int(2) NOT NULL DEFAULT '0' COMMENT '是否处于入款接单状态 1 接单 0 暂停接单【下游商户则为是否可以交易】',
-    `remitOrderState`   int(2) NOT NULL DEFAULT '0' COMMENT '是否处于入款接单状态 1 接单 0 暂停接单【下游商户则为是否可以代付】',
-    `createTime`        datetime       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '数据创建时间',
-    `submitTime`        datetime                DEFAULT NULL COMMENT '最后一次数据修改时间',
-    `privateKey`        text COMMENT '商户私钥',
-    `publicKey`         text COMMENT '商户公钥',
-    `startTime`         varchar(10)             DEFAULT NULL COMMENT '限制时间-开始时间',
-    `endTime`           varchar(10)             DEFAULT NULL COMMENT '限制时间-结束时间',
-    `witip`             text COMMENT '代付ip白名单',
-    `dealUrl`           text COMMENT '商户配置网关',
+    `id`         int(32) NOT NULL AUTO_INCREMENT COMMENT '数据id',
+    `userId`     varchar(32)  NOT NULL COMMENT '用户id【登录账号】',
+    `userName`   varchar(32)  NOT NULL COMMENT '用户昵称',
+    `password`   varchar(128) NOT NULL COMMENT 'shiro加密秘钥【登录】',
+    `payPasword` varchar(256) NOT NULL COMMENT 'shiro加密秘钥【资金】【商户则为交易秘钥】',
+    `salt`       varchar(32) DEFAULT NULL COMMENT '秘钥加密盐值【加密算法】',
+    `salt`       varchar(32) DEFAULT NULL COMMENT '秘钥加密盐值【加密算法】',
     PRIMARY KEY (`id`),
     UNIQUE KEY `user` (`userId`)
         UNIQUE KEY `username` (`userName`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户详情表';
-drop table if exists pay_user_info;
-CREATE TABLE `pay_user_fund`
+
+drop table if exists pay_merchant_role;
+CREATE TABLE `pay_merchant_role`
 (
-    `id`                  int(32) NOT NULL AUTO_INCREMENT COMMENT '数据id',
-    `userId`              varchar(24)    NOT NULL COMMENT '账户id【登录账户】',
-    `userName`            varchar(32)    NOT NULL COMMENT '账户昵称【登录账户名】',
-    `freezeBalance`       decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '冻结账户',
-    `accountBalance`      decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '可取现账户金额【码商账户余额=现金账户+充值点数-冻结金额】',
-    `sumDealAmount`       decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '累计交易额',
-    `sumRechargeAmount`   decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '累计充值金额【充值成功时统计记录】',
-    `sumProfit`           decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '累计利润金额',
-    `sumWitAmount`        decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '累计代付金额',
-    `sumAgentProfit`      decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '累计代理商利润【如果当前账户为商户则该数据为0】',
-    `sumOrderCount`       int(32) NOT NULL DEFAULT '0' COMMENT '累计接单笔数',
-    `todayWitAmount`      decimal(19, 0) NOT NULL DEFAULT '0' COMMENT '当日代付金额',
-    `todayDealAmount`     decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '当日接单金额',
-    `todayProfit`         decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '当日接单利润【代理利润+接单利润=当日利润】',
-    `todayOrderCount`     int(32) NOT NULL DEFAULT '0' COMMENT '当日接单笔数',
-    `todayAgentProfit`    decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '当日代理商利润【如果当前账户为商户则该数据为0】',
-    `userType`            char(3)        NOT NULL COMMENT '用户类型,商户1 码商2 渠道3',
-    `agent`               varchar(24)             DEFAULT NULL COMMENT '代理商id【如果存在代理商则存在数据,如果不存在代理商则为null】',
-    `createTime`          datetime       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '数据创建时间',
-    `submitTime`          datetime       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后一次数据修改时间',
-    `version`             int(18) DEFAULT '0' COMMENT '数据版本号【数据修改锁】',
-    `currency`            varchar(12)    NOT NULL DEFAULT 'CNY' COMMENT '货币类型',
-    `quota`               decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '授权额度',
-    `sumOtherWitAmount`   decimal(19, 4)          DEFAULT '0.0000' COMMENT '卡商接单历史',
-    `todayOtherWitAmount` decimal(19, 4)          DEFAULT '0.0000' COMMENT '卡商当日接单历史',
-    `deposit`             decimal(19, 6)          DEFAULT '0.000000' COMMENT '登记押金',
+    `id`                int(32) NOT NULL AUTO_INCREMENT COMMENT '数据id',
+    `userId`            varchar(32) NOT NULL COMMENT '用户id【登录账号】',
+    `switchs`           int(2) NOT NULL DEFAULT '1' COMMENT '当前用户总开关 1开启0关闭',
+    `userNode`          varchar(128)         DEFAULT '未添加' COMMENT '组群备注,如果为渠道账户则为渠道商户号',
+    `agent`             varchar(24)          DEFAULT NULL COMMENT '代理商id',
+    `isAgent`           char(3)              DEFAULT NULL COMMENT '是否为代理商:1代理商2普通商户',
+    `receiveOrderState` int(2) NOT NULL DEFAULT '0' COMMENT '是否处于入款接单状态 1 接单 0 暂停接单',
+    `remitOrderState`   int(2) NOT NULL DEFAULT '0' COMMENT '是否处于出款接单状态 1 接单 0 暂停接单',
+    `createTime`        datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '数据创建时间',
+    `submitTime`        datetime             DEFAULT NULL COMMENT '最后一次数据修改时间',
+    `privateKey`        text COMMENT '商户私钥',
+    `publicKey`         text COMMENT '商户公钥',
+    `startTime`         varchar(10)          DEFAULT NULL COMMENT '限制时间-开始时间',
+    `endTime`           varchar(10)          DEFAULT NULL COMMENT '限制时间-结束时间',
+    `witip`             text COMMENT '代付ip白名单',
+    `dealUrl`           text COMMENT '商户配置网关',
     PRIMARY KEY (`id`),
     UNIQUE KEY `user` (`userId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户权限控制';
+
+drop table if exists pay_user_fund;
+CREATE TABLE `pay_user_fund`
+(
+    `id`          int(32) NOT NULL AUTO_INCREMENT COMMENT '数据id',
+    `userId`      varchar(24)    NOT NULL COMMENT '主账号id',
+    `fundId`      varchar(24)    NOT NULL COMMENT '子账号id',
+    `accountType` varchar(24)    NOT NULL COMMENT '账户类型',
+    `balance`     decimal(19, 4) NOT NULL DEFAULT '0.0000' COMMENT '账户余额',
+    `role`        int(32) NOT NULL DEFAULT 0 COMMENT '账户规则： 0 减账户 1 加账户',
+    `createTime`  datetime       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '数据创建时间',
+    `version`     int(18) DEFAULT 0 COMMENT '数据版本号【数据修改锁】',
+    `currency`    varchar(12)    NOT NULL DEFAULT 'CNY' COMMENT '货币类型',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `user` (`userId`,`accountType`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户资金账户表';
+
 drop table if exists pay_run_order;
 CREATE TABLE `pay_run_order`
 (
@@ -150,7 +143,7 @@ CREATE TABLE `pay_deal_order`
     `dealAmount`      decimal(19, 4) NOT NULL COMMENT '订单交易金额',
     `dealFee`         decimal(19, 4)                                  DEFAULT NULL COMMENT '订单交易手续费',
     `actualAmount`    decimal(17, 4) NOT NULL COMMENT '实际到账金额',
-    `orderType`       char(2)                                         DEFAULT NULL COMMENT '订单类型:1四方交易,2三方交易',
+    `orderType`       char(2)                                         DEFAULT NULL COMMENT '订单类型:1四方交易,2三方交易,3撮合交易',
     `orderAccount`    char(24)       NOT NULL COMMENT '订单关联商户账号',
     `orderQrUser`     char(32)       NOT NULL COMMENT '关联码商账户',
     `orderQr`         varchar(200)                                    DEFAULT NULL,
@@ -172,5 +165,69 @@ CREATE TABLE `pay_deal_order`
     `urge`            int(10) unsigned DEFAULT '0' COMMENT '催单，1是催单，0是正常',
     PRIMARY KEY (`id`),
     UNIQUE KEY `orderId` (`orderId`),
-     KEY               `idx_associatedId` (`associatedId`),
- ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='交易订单表';
+    KEY   `idx_associatedId` (`associatedId`),
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='交易订单表';
+
+
+drop table if exists pay_deal_wit;
+CREATE TABLE `pay_deal_wit`
+(
+    `id`              mediumint(16) unsigned NOT NULL AUTO_INCREMENT COMMENT '数据id',
+    `orderId`         char(48)       NOT NULL COMMENT '订单号',
+    `associatedId`    char(48)       NOT NULL COMMENT '关联订单号',
+    `orderStatus`     char(2)        NOT NULL COMMENT '订单状态:0预下单1处理中2成功3未收到回调4失败5超时6订单申述7人工处理',
+    `dealAmount`      decimal(19, 4) NOT NULL COMMENT '订单交易金额',
+    `dealFee`         decimal(19, 4)                                  DEFAULT NULL COMMENT '订单交易手续费',
+    `actualAmount`    decimal(17, 4) NOT NULL COMMENT '实际到账金额',
+    `orderType`       char(2)                                         DEFAULT NULL COMMENT '订单类型:1四方交易,2三方交易',
+    `orderAccount`    char(24)       NOT NULL COMMENT '订单关联商户账号',
+    `orderQrUser`     char(32)       NOT NULL COMMENT '关联码商账户或者渠道账户',
+    `orderQr`         varchar(200)                                    DEFAULT NULL,
+    `externalOrderId` varchar(48)                                     DEFAULT NULL COMMENT '外部订单号(下游商户请求参数,用户数据回调)',
+    `dealDescribe`    text COMMENT '交易备注',
+    `notify`          varchar(128)                                    DEFAULT NULL COMMENT '订单异步回调地址',
+    `back`            varchar(128)                                    DEFAULT NULL COMMENT '订单同步回调地址',
+    `isNotify`        varchar(3)     NOT NULL                         DEFAULT 'NO' COMMENT '是否發送通知 //  YES 已發送    NO 未發送',
+    `createTime`      datetime       NOT NULL                         DEFAULT CURRENT_TIMESTAMP COMMENT '数据生成时间（该时间等同于交易时间）',
+    `submitTime`      datetime       NOT NULL                         DEFAULT CURRENT_TIMESTAMP COMMENT '数据修改时间',
+    `product`         varchar(28) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '订单交易产品类型',
+    `profit`          decimal(19, 6)                                  DEFAULT NULL COMMENT '当前订单系统盈利',
+    `settlement`      int(2) NOT NULL DEFAULT 1 COMMENT '1为订单成功未结算，2为订单成功已结算',
+    `currency`        varchar(5)     NOT NULL                         DEFAULT 'CNY' COMMENT '货币类型',
+    `payInfo`         varchar(100)                                    DEFAULT NULL COMMENT '回调详情',
+    `operater`        varchar(16)                                     DEFAULT NULL COMMENT '操作人',
+    `recordType`      varchar(16)                                     DEFAULT NULL COMMENT '记录类型',
+    `systemAmount`    decimal(19, 4)                                  DEFAULT '0.000000' COMMENT '系统业务余额',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `orderId` (`orderId`),
+    KEY               `idx_associatedId` (`associatedId`),
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='交易订单表';
+
+
+-- auto-generated definition
+
+drop table if exists pay_amount;
+create table pay_amount
+(
+    id             int(32) auto_increment comment '数据id'
+        primary key,
+    orderId        char(48)       not null comment '手动订单号',
+    userId         varchar(32)    not null comment '会员id(唯一识别号)(index索引)',
+    amountType     char(2)        not null comment '1 加款类型  2 扣款类型',
+    accname        varchar(32) null comment '申请人姓名【后台管理人员】',
+    orderStatus    char(3)        not null comment '1申请 2审批中  3成功  4失败 5挂起',
+    amount         decimal(19, 2) not null comment '金额',
+    fee            decimal(19, 2) null comment '手续费',
+    actualAmount   decimal(19, 2) not null comment '真实到账金额',
+    dealDescribe   text           not null comment '加扣款描述',
+    createTime     datetime                default CURRENT_TIMESTAMP not null comment '数据创建时间',
+    submitTime     datetime                default CURRENT_TIMESTAMP null comment '数据修改时间',
+    `settlement`   int(2) NOT NULL DEFAULT 1 COMMENT '1为订单成功未结算，2为订单成功已结算',
+    approval       varchar(50) null comment '审核人',
+    comment        varchar(300) null comment '审核意见',
+    transferUserId varchar(32) null comment '转账订单入款用户',
+    `currency`     varchar(5)     NOT NULL DEFAULT 'CNY' COMMENT '货币类型',
+    constraint orderId
+        unique (orderId)
+) comment '手动加扣款记录表';
+

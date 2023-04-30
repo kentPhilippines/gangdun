@@ -14,7 +14,6 @@
     <description>
         web服务入口
     </description>
-
     <dependencies>
 
         <!-- SpringBoot集成thymeleaf模板 -->
@@ -67,6 +66,50 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+
+        <!-- shiro整合redis -->
+        <dependency>
+            <groupId>org.crazycake</groupId>
+            <artifactId>shiro-redis</artifactId>
+            <version>3.3.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.velocity</groupId>
+                    <artifactId>velocity</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- springboot整合redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>2.2.5.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <version>2.2.5.RELEASE</version>
+        </dependency>-->
+        <!--   <dependency>
+               <groupId>com.alibaba.boot</groupId>
+               <artifactId>nacos-config-spring-boot-starter</artifactId>
+               <version>${nacos-config-spring-boot.version}</version>
+           </dependency>
+
+           <dependency>
+               <groupId>com.alibaba.boot</groupId>
+               <artifactId>nacos-config-spring-boot-actuator</artifactId>
+               <version>${nacos-config-spring-boot.version}</version>
+           </dependency>-->
+        <!-- springcloud alibaba nacos config -->
+        <!--   <dependency>
+                 <groupId>com.alibaba.cloud</groupId>
+                 <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+             </dependency>-->
     </dependencies>
 
     <build>
@@ -86,15 +129,15 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>   
-                <groupId>org.apache.maven.plugins</groupId>   
-                <artifactId>maven-war-plugin</artifactId>   
-                <version>3.0.0</version>   
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>${project.artifactId}</warName>
-                </configuration>   
-            </plugin>   
+                </configuration>
+            </plugin>
             <!-- YUI Compressor (CSS/JS压缩) 
             <plugin>
                 <groupId>net.alchim31.maven</groupId>

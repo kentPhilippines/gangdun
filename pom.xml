@@ -29,12 +29,17 @@
         <commons.io.version>2.11.0</commons.io.version>
         <poi.version>4.1.2</poi.version>
         <velocity.version>2.3</velocity.version>
+        <nacos-config-spring-boot.version>0.2.12</nacos-config-spring-boot.version>
     </properties>
 
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
-        
+
+         <!--   <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+            </dependency>-->
             <!-- SpringBoot的依赖配置-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -72,12 +77,6 @@
                 <version>${shiro.version}</version>
             </dependency>
 
-            <!-- Shiro使用EhCache缓存框架 -->
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-ehcache</artifactId>
-                <version>${shiro.version}</version>
-            </dependency>
 
             <!-- thymeleaf模板引擎和shiro框架的整合 -->
             <dependency>
@@ -182,7 +181,17 @@
                 <artifactId>ruoyi-common</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
+     <!--       <dependency>
+                <groupId>com.alibaba.boot</groupId>
+                <artifactId>nacos-config-spring-boot-starter</artifactId>
+                <version>${nacos-config-spring-boot.version}</version>
+            </dependency>
 
+            <dependency>
+                <groupId>com.alibaba.boot</groupId>
+                <artifactId>nacos-config-spring-boot-actuator</artifactId>
+                <version>${nacos-config-spring-boot.version}</version>
+            </dependency>-->
         </dependencies>
     </dependencyManagement>
 
