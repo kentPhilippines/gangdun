@@ -15,7 +15,16 @@
         web服务入口
     </description>
     <dependencies>
-
+                <dependency>
+                    <groupId>com.alibaba.boot</groupId>
+                    <artifactId>nacos-config-spring-boot-starter</artifactId>
+                    <version>0.2.7</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.alibaba.boot</groupId>
+                    <artifactId>nacos-config-spring-boot-actuator</artifactId>
+                    <version>0.2.7</version>
+                </dependency>
         <!-- SpringBoot集成thymeleaf模板 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
