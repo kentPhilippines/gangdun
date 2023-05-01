@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.cache.Cache;
@@ -35,13 +36,12 @@ import com.ruoyi.system.domain.SysUserOnline;
 
 /**
  * 在线用户监控
- * 
+ *
  * @author ruoyi
  */
 @Controller
 @RequestMapping("/monitor/online")
-public class SysUserOnlineController extends BaseController
-{
+public class SysUserOnlineController extends BaseController {
     private String prefix = "monitor/online";
 
     @Autowired
@@ -49,51 +49,37 @@ public class SysUserOnlineController extends BaseController
 
     @RequiresPermissions("monitor:online:view")
     @GetMapping()
-    public String online()
-    {
+    public String online() {
         return prefix + "/online";
     }
 
     @RequiresPermissions("monitor:online:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(SysUserOnline userOnline)
-    {
+    public TableDataInfo list(SysUserOnline userOnline) {
         String ipaddr = userOnline.getIpaddr();
         String loginName = userOnline.getLoginName();
         TableDataInfo rspData = new TableDataInfo();
         Collection<Session> sessions = redisSessionDAO.getActiveSessions();
         Iterator<Session> it = sessions.iterator();
         List<SysUserOnline> sessionList = new ArrayList<SysUserOnline>();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             SysUserOnline user = getSession(it.next());
-            if (StringUtils.isNotNull(user))
-            {
-                if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(loginName))
-                {
+            if (StringUtils.isNotNull(user)) {
+                if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(loginName)) {
                     if (StringUtils.equals(ipaddr, user.getIpaddr())
-                            && StringUtils.equals(loginName, user.getLoginName()))
-                    {
+                            && StringUtils.equals(loginName, user.getLoginName())) {
                         sessionList.add(user);
                     }
-                }
-                else if (StringUtils.isNotEmpty(ipaddr))
-                {
-                    if (StringUtils.equals(ipaddr, user.getIpaddr()))
-                    {
+                } else if (StringUtils.isNotEmpty(ipaddr)) {
+                    if (StringUtils.equals(ipaddr, user.getIpaddr())) {
                         sessionList.add(user);
                     }
-                }
-                else if (StringUtils.isNotEmpty(loginName))
-                {
-                    if (StringUtils.equals(loginName, user.getLoginName()))
-                    {
+                } else if (StringUtils.isNotEmpty(loginName)) {
+                    if (StringUtils.equals(loginName, user.getLoginName())) {
                         sessionList.add(user);
                     }
-                }
-                else
-                {
+                } else {
                     sessionList.add(user);
                 }
             }
@@ -103,18 +89,15 @@ public class SysUserOnlineController extends BaseController
         return rspData;
     }
 
-    @RequiresPermissions(value = { "monitor:online:batchForceLogout", "monitor:online:forceLogout" }, logical = Logical.OR)
+    @RequiresPermissions(value = {"monitor:online:batchForceLogout", "monitor:online:forceLogout"}, logical = Logical.OR)
     @Log(title = "在线用户", businessType = BusinessType.FORCE)
     @PostMapping("/batchForceLogout")
     @ResponseBody
-    public AjaxResult batchForceLogout(@RequestBody List<SysUserOnline> sysUserOnlines)
-    {
-        for (SysUserOnline userOnline : sysUserOnlines)
-        {
+    public AjaxResult batchForceLogout(@RequestBody List<SysUserOnline> sysUserOnlines) {
+        for (SysUserOnline userOnline : sysUserOnlines) {
             String sessionId = userOnline.getSessionId();
             String loginName = userOnline.getLoginName();
-            if (sessionId.equals(ShiroUtils.getSessionId()))
-            {
+            if (sessionId.equals(ShiroUtils.getSessionId())) {
                 return error("当前登录用户无法强退");
             }
             redisSessionDAO.delete(redisSessionDAO.readSession(sessionId));
@@ -123,25 +106,20 @@ public class SysUserOnlineController extends BaseController
         return success();
     }
 
-    private SysUserOnline getSession(Session session)
-    {
+    private SysUserOnline getSession(Session session) {
         Object obj = session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-        if (null == obj)
-        {
+        if (null == obj) {
             return null;
         }
-        if (obj instanceof SimplePrincipalCollection)
-        {
+        if (obj instanceof SimplePrincipalCollection) {
             SimplePrincipalCollection spc = (SimplePrincipalCollection) obj;
             obj = spc.getPrimaryPrincipal();
-            if (null != obj && obj instanceof SysUser)
-            {
+            if (null != obj && obj instanceof SysUser) {
                 SysUser sysUser = (SysUser) obj;
                 SysUserOnline userOnline = new SysUserOnline();
                 userOnline.setSessionId(session.getId().toString());
                 userOnline.setLoginName(sysUser.getLoginName());
-                if (StringUtils.isNotNull(sysUser.getDept()) && StringUtils.isNotEmpty(sysUser.getDept().getDeptName()))
-                {
+                if (StringUtils.isNotNull(sysUser.getDept()) && StringUtils.isNotEmpty(sysUser.getDept().getDeptName())) {
                     userOnline.setDeptName(sysUser.getDept().getDeptName());
                 }
                 userOnline.setIpaddr(session.getHost());
@@ -153,12 +131,10 @@ public class SysUserOnlineController extends BaseController
         return null;
     }
 
-    public void removeUserCache(String loginName, String sessionId)
-    {
+    public void removeUserCache(String loginName, String sessionId) {
         Cache<String, Deque<Serializable>> cache = SpringUtils.getBean(RedisCacheManager.class).getCache(ShiroConstants.SYS_USERCACHE);
         Deque<Serializable> deque = cache.get(loginName);
-        if (StringUtils.isEmpty(deque) || deque.size() == 0)
-        {
+        if (StringUtils.isEmpty(deque) || deque.size() == 0) {
             return;
         }
         deque.remove(sessionId);
