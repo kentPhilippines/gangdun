@@ -12,6 +12,8 @@ import com.ruoyi.system.mapper.SysPostMapper;
 import com.ruoyi.system.mapper.SysUserPostMapper;
 import com.ruoyi.system.service.ISysPostService;
 
+import javax.annotation.Resource;
+
 /**
  * 岗位信息 服务层处理
  * 
@@ -20,10 +22,10 @@ import com.ruoyi.system.service.ISysPostService;
 @Service
 public class SysPostServiceImpl implements ISysPostService
 {
-    @Autowired
+    @Resource
     private SysPostMapper postMapper;
 
-    @Autowired
+    @Resource
     private SysUserPostMapper userPostMapper;
 
     /**
