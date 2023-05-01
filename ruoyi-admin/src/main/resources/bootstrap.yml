@@ -1,12 +1,13 @@
-spring:
-  cloud:
-    nacos:
-      config:
-        server-addr: 94.74.120.122:8848
-        namespace: pro
-        data-id: admin.yaml
-        group: NCY_GROUP
-        bootstrap:
-          enable: true
-          log-enable: true
-        type: yaml
+nacos:
+  config:
+    server-addr: 94.74.120.122:8848
+    namespace: pro
+    data-id: admin.yaml
+    group: NCY_GROUP
+    bootstrap:
+      enable: true
+      log-enable: true
+    type: yaml
+  auto-refresh: true
+  enable-remote-sync-config: true
+

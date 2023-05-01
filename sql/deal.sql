@@ -165,7 +165,7 @@ CREATE TABLE `pay_deal_order`
     `urge`            int(10) unsigned DEFAULT '0' COMMENT '催单，1是催单，0是正常',
     PRIMARY KEY (`id`),
     UNIQUE KEY `orderId` (`orderId`),
-    KEY   `idx_associatedId` (`associatedId`),
+    KEY               `idx_associatedId` (`associatedId`),
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='交易订单表';
 
 
@@ -213,7 +213,7 @@ create table pay_amount
         primary key,
     orderId        char(48)       not null comment '手动订单号',
     userId         varchar(32)    not null comment '会员id(唯一识别号)(index索引)',
-    amountType     char(2)        not null comment '1 加款类型  2 扣款类型',
+    amountType     char(2)        not null comment '1 加款类型  2 扣款类型  3 转账类型',
     accname        varchar(32) null comment '申请人姓名【后台管理人员】',
     orderStatus    char(3)        not null comment '1申请 2审批中  3成功  4失败 5挂起',
     amount         decimal(19, 2) not null comment '金额',
@@ -230,4 +230,60 @@ create table pay_amount
     constraint orderId
         unique (orderId)
 ) comment '手动加扣款记录表';
+
+
+-- auto-generated definition
+drop table if exists pay_product;
+create table pay_product
+(
+    id          int(32) auto_increment comment '数据id'
+        primary key,
+    productCode varchar(12)                        not null comment '产品code',
+    productName varchar(24)                        not null comment '产品名',
+    `describe`  varchar(36) null comment '产品备注',
+    createTime  datetime default CURRENT_TIMESTAMP not null comment '数据创建时间',
+    submitTime  datetime default CURRENT_TIMESTAMP not null comment '最后一次数据修改时间',
+) comment '产品表';
+
+
+-- auto-generated definition
+drop table if exists pay_product;
+create table pay_chanel_fee
+(
+    id          int(32) auto_increment comment '数据id'
+        primary key,
+    channelId   varchar(24)                        not null comment '渠道ID',
+    productId   varchar(24)                        not null comment '产品id',
+    impl        varchar(32)                        not null comment '实体类对应关系',
+    channelRFee decimal(19, 6) null comment '渠道充值 费率',
+    channelDFee decimal(19, 6) null comment '渠道代付费率',
+    channelNo   varchar(24) null comment '上游渠道通道编号',
+    createTime  datetime default CURRENT_TIMESTAMP not null,
+    submitTime  datetime default CURRENT_TIMESTAMP not null,
+     constraint impl
+        unique (channelId, productId)
+);
+
+drop table if exists pay_channel_info;
+CREATE TABLE `pay_channel_info`
+(
+    `id`         int(32) NOT NULL AUTO_INCREMENT COMMENT '数据id',
+    `channelId`     varchar(32)  NOT NULL COMMENT '用户id【登录账号】',
+    `channelName`   varchar(32)  NOT NULL COMMENT '用户昵称',
+    `password`   text   COMMENT 'shiro加密秘钥【登录】',
+    `payPasword` text   COMMENT 'shiro加密秘钥【资金】【商户则为交易秘钥】',
+    `privateKey`        text COMMENT '商户私钥',
+    `publicKey`         text COMMENT '商户公钥',
+    `dealUrl`   varchar(128) NOT NULL COMMENT '交易接口',
+    `witUrl` varchar(256) NOT NULL COMMENT '代付接口',
+    `fundUrl` varchar(256) NOT NULL COMMENT '资金查询接口',
+    `findDealOrderUrl` varchar(256) NOT NULL COMMENT '交易订单查询接口',
+    `findWitOrderUrl` varchar(256) NOT NULL COMMENT '代付订单查询接口',
+     PRIMARY KEY (`id`),
+    UNIQUE KEY `user` (`channelId`)
+    UNIQUE KEY `username` (`channelName`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户详情表';
+
+
+
 
